@@ -58,22 +58,32 @@ async function fetchData(domain) {
 
         // Tratar os dados retornados
         const whois = {};
-        const dataSOA = data1.filter(obj => obj.record_type === "SOA" || obj.record_type === "A")
-        const dataA = data3;
+        const dataA1 = data1.filter(obj => obj.record_type === "A")
+        const dataSOA = data1.filter(obj => obj.record_type === "SOA")
+        const dataA2 = data3;
 
 
         if (data2.hasOwnProperty('domain_name')) {
           whois.domain_name = data2.domain_name;
         }
+
+        if (data2.hasOwnProperty('registrant_name')) {
+            whois.registrant_name = data2.registrant_name;
+        }
         
         if (data2.hasOwnProperty('creation_date')) {
-          const creationDateInSeconds = data2.creation_date;
-          const creationDateInMilliseconds = creationDateInSeconds * 1000;
-          const new_date = new Date(creationDateInMilliseconds)
-          const dia = String(new_date.getDate()).padStart(2, '0');
-          const mes = String(new_date.getMonth() + 1).padStart(2, '0');
-          const ano = new_date.getFullYear();
-          whois.creation_date = `${dia}/${mes}/${ano}`;
+            var creationDateInSeconds;
+            if(typeof(data2.creation_date) == 'object'){
+                creationDateInSeconds = data2.creation_date[data2.creation_date.length - 1];
+            }else{
+                creationDateInSeconds = data2.creation_date
+            }
+            const creationDateInMilliseconds = creationDateInSeconds * 1000;
+            const new_date = new Date(creationDateInMilliseconds)
+            const dia = String(new_date.getDate()).padStart(2, '0');
+            const mes = String(new_date.getMonth() + 1).padStart(2, '0');
+            const ano = new_date.getFullYear();
+            whois.creation_date = `${dia}/${mes}/${ano}`;
         }
         
         if (data2.hasOwnProperty('expiration_date')) {
@@ -87,27 +97,45 @@ async function fetchData(domain) {
         }
 
         const tableBody = document.getElementById('tbody');
-        const row = document.createElement('tr');
-        const cell1 = document.createElement('td');
-        cell1.textContent = domain.replace(/www./g, '');
-        const cell2 = document.createElement('td');
-        cell2.textContent = dataSOA[0].record_type;
-        const cell3 = document.createElement('td');
-        cell3.textContent = dataSOA[0].value;
-        row.append(cell1, cell2, cell3);
+        dataA1.forEach(obj => {
+            const row = document.createElement('tr');
+            const cell1 = document.createElement('td');
+            cell1.textContent = domain.replace(/www./g, '');
+            const cell2 = document.createElement('td');
+            cell2.textContent = obj.record_type;
+            const cell3 = document.createElement('td');
+            cell3.textContent = obj.value;
+            row.append(cell1, cell2, cell3);
+            tableBody.appendChild(row);
+        })
+
+        dataSOA.forEach(obj => {
+            const row = document.createElement('tr');
+            const cell1 = document.createElement('td');
+            cell1.textContent = domain.replace(/www./g, '');
+            const cell2 = document.createElement('td');
+            cell2.textContent = obj.record_type;
+            const cell3 = document.createElement('td');
+            cell3.textContent = obj.rname;
+            row.append(cell1, cell2, cell3);
+            tableBody.appendChild(row);
+        })
 
 
-        const row2 = document.createElement('tr');
-        const cell4 = document.createElement('td');
-        cell4.textContent = domain.replace(/www./g, '');
-        const cell5 = document.createElement('td');
-        cell5.textContent = dataSOA[1].record_type;
-        const cell6 = document.createElement('td');
-        cell6.textContent = dataSOA[1].rname;
-        row2.append(cell4, cell5, cell6);
-        tableBody.append(row, row2);
 
-        dataA.forEach(obj => {
+
+
+        // const row2 = document.createElement('tr');
+        // const cell4 = document.createElement('td');
+        // cell4.textContent = domain.replace(/www./g, '');
+        // const cell5 = document.createElement('td');
+        // cell5.textContent = dataSOA[1].record_type;
+        // const cell6 = document.createElement('td');
+        // cell6.textContent = dataSOA[1].rname;
+        // row2.append(cell4, cell5, cell6);
+        // tableBody.appendChild(row2);
+
+        dataA2.forEach(obj => {
             const row = document.createElement('tr');
             const cell1 = document.createElement('td');
             cell1.textContent = 'www.'+domain.replace(/www./g, '');
@@ -127,6 +155,23 @@ async function fetchData(domain) {
             cell2.textContent = chave;
             const cell3 = document.createElement('td');
             cell3.textContent = valor;
+            if(chave == 'expiration_date'){
+                const dataObjeto = new Date();
+                const dataMilissegundos = dataObjeto.getTime();
+                const date = valor;
+                const partes = date.split('/'); 
+                const dia = parseInt(partes[0], 10);
+                const mes = parseInt(partes[1], 10) - 1; 
+                const ano = parseInt(partes[2], 10);
+                const expDate = new Date(ano, mes, dia);
+                console.log(expDate.getTime())
+                console.log(dataMilissegundos);
+                if(dataMilissegundos >= expDate.getTime()){
+                    cell1.className = 'fw-bold text-danger'
+                    cell2.className = 'fw-bold text-danger'
+                    cell3.className = 'fw-bold text-danger'
+                }
+            }
             row.append(cell1, cell2, cell3);  
             tableBody.appendChild(row);
         });
