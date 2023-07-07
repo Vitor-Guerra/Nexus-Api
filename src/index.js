@@ -10,6 +10,7 @@ document.getElementById('domain').addEventListener("keydown", function(event) {
         loading.classList.remove('d-none')
         search.disabled = true
         table.classList.add('d-none')
+        document.getElementById('buy-domain').classList.add('d-none')
         fetchData(domain)
     }
 });
@@ -53,8 +54,33 @@ async function fetchData(domain) {
         const data2 = await response2.json();
         const data3 = await response3.json();
 
-        
-         
+        if(Object.keys(data2).length == 0){
+            var response4;
+            response4 = await fetch(`https://domain-availability.whoisxmlapi.com/api/v1?apiKey=at_irdYx1MF7meC5ZcvweodrGBeYJchA&domainName=${domain.replace(/www./g, '')}&credits=DA`,{
+                method: 'GET'
+            })
+
+            const data4 = await response4.json();
+            console.log(data4)
+            if(data4.DomainInfo.domainAvailability == "AVAILABLE"){
+                var loading = document.getElementById('loading')
+                var table = document.getElementById('response')
+                var json = document.getElementById('show-json')
+                var search = document.getElementById('domain')
+                loading.classList.add('d-none')
+                table.classList.add('d-none')
+                search.disabled = false
+                document.getElementById('buy-domain').classList.remove('d-none')
+                document.getElementById('domain-available').textContent = domain.replace(/www./g, '')
+            }else{
+                alert('Opa, esse dominio não tá disponível para compra e não possui dados no whois')
+                var search = document.getElementById('domain')
+                var loading = document.getElementById('loading')
+                search.disabled = false
+                loading.classList.add('d-none')
+            }
+
+        }else{
 
         // Tratar os dados retornados
         const whois = {};
@@ -170,6 +196,14 @@ async function fetchData(domain) {
                     cell1.className = 'fw-bold text-danger'
                     cell2.className = 'fw-bold text-danger'
                     cell3.className = 'fw-bold text-danger'
+                    cell3.textContent = cell3.textContent + ' (Domínio Congelado)'
+                    var span = document.getElementById('status')
+                    span.textContent = 'CONGELADO'
+                    span.className = 'text-danger'
+                }else{
+                    var span = document.getElementById('status')
+                    span.textContent = 'ATIVO'
+                    span.className = 'text-success'
                 }
             }
             row.append(cell1, cell2, cell3);  
@@ -201,19 +235,20 @@ async function fetchData(domain) {
                 document.getElementById('data2').innerText = JSON.stringify(data2, null, 2)
                 document.getElementById('data3').innerText = JSON.stringify(data3, null, 2)
             });
-
-        } catch (error) {
-            // Lidar com erros das requisições
-            console.error(error);
-            var table = document.getElementById('response')
-            var search = document.getElementById('domain')
-            var loading = document.getElementById('loading')
-            table.classList.add('d-none')
-            loading.classList.add('d-none')
-            search.disabled = false
-            alert('Ops, Não deu muito certo. Objeto está quebrado ou o site não existe')
-            console.log(data1);
-            console.log(data2);
-            console.log(data3);
         }
+
+    } catch (error) {
+        // Lidar com erros das requisições
+        console.error(error);
+        var table = document.getElementById('response')
+        var search = document.getElementById('domain')
+        var loading = document.getElementById('loading')
+        table.classList.add('d-none')
+        loading.classList.add('d-none')
+        search.disabled = false
+        alert('Ops, Não deu muito certo. Objeto está quebrado ou o site não existe')
+        console.log(data1);
+        console.log(data2);
+        console.log(data3);
+    }
     }
