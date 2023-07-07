@@ -1,0 +1,120 @@
+body{
+    background-color: #2d2d2d;
+}
+
+.input-icon {
+    position: relative;
+}
+
+.input-icon input {
+    padding-left: 45px; /* Ajuste a largura do ícone conforme necessário */
+    background-color: #2d2d2d;
+    border-radius: 25px;
+    border: #969494 solid 1px;
+    color: #d8d8d8;
+}
+
+.input-icon input:disabled {
+    /* padding-left: 45px; Ajuste a largura do ícone conforme necessário */
+    background-color: #2d2d2d;
+    /* border-radius: 25px;
+    border: #969494 solid 1px; */
+    color: #9e9e9e;
+}
+
+.input-icon input:focus {
+    background-color: #2d2d2d;
+    border-radius: 25px;
+    border: #969494 solid 1px;
+    color: #d8d8d8;
+}
+
+
+.input-icon i {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    color: #969494;
+}
+
+h3{
+    color: #f0f0f0;
+}
+
+th{
+    color: #f0f0f0;
+}
+
+td{
+    color: #f0f0f0;
+}
+
+pre{
+    color: #f0f0f0;
+}
+.black-nav{
+    color: #f0f0f0;
+}
+.spinner {
+    margin: 100px auto;
+    width: 50px;
+    height: 60px;
+    text-align: center;
+    font-size: 10px;
+  }
+  
+  .spinner > div {
+    background-color: #00d1b2;
+    height: 100%;
+    width: 6px;
+    display: inline-block;
+    -webkit-animation: stretchDelay 1.2s infinite ease-in-out;
+    animation: stretchDelay 1.2s infinite ease-in-out;
+  }
+  
+  .spinner .rect2 {
+    -webkit-animation-delay: -1.1s;
+    animation-delay: -1.1s;
+  }
+  
+  .spinner .rect3 {
+    -webkit-animation-delay: -1s;
+    animation-delay: -1s;
+  }
+  
+  .spinner .rect4 {
+    -webkit-animation-delay: -0.9s;
+    animation-delay: -0.9s;
+  }
+  
+  .spinner .rect5 {
+    -webkit-animation-delay: -0.8s;
+    animation-delay: -0.8s;
+  }
+  
+  @-webkit-keyframes stretchDelay {
+    0%,
+    40%,
+    100% {
+      -webkit-transform: scaleY(0.4);
+    }
+    20% {
+      -webkit-transform: scaleY(1);
+    }
+  }
+  
+  @keyframes stretchDelay {
+    0%,
+    40%,
+    100% {
+      transform: scaleY(0.4);
+      -webkit-transform: scaleY(0.4);
+    }
+    20% {
+      transform: scaleY(1);
+      -webkit-transform: scaleY(1);
+    }
+  }
+  
+  
