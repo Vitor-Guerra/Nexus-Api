@@ -84,7 +84,7 @@ async function fetchData(domain) {
 
         // Tratar os dados retornados
         const whois = {};
-        const dataA1 = data1.filter(obj => obj.record_type === "A")
+        const dataA1 = data1.filter(obj => obj.record_type === "A" || obj.record_type === "AAAA")
         const dataSOA = data1.filter(obj => obj.record_type === "SOA")
         const dataA2 = data3;
 
@@ -124,6 +124,7 @@ async function fetchData(domain) {
 
         const tableBody = document.getElementById('tbody');
         dataA1.forEach(obj => {
+
             const row = document.createElement('tr');
             const cell1 = document.createElement('td');
             cell1.textContent = domain.replace(/www./g, '');
@@ -131,6 +132,11 @@ async function fetchData(domain) {
             cell2.textContent = obj.record_type;
             const cell3 = document.createElement('td');
             cell3.textContent = obj.value;
+            if(obj.record_type == 'AAAA'){
+                cell1.className = 'fw-bold text-warning';
+                cell2.className = 'fw-bold text-warning';
+                cell3.className = 'fw-bold text-warning';
+            }
             row.append(cell1, cell2, cell3);
             tableBody.appendChild(row);
         })
