@@ -84,9 +84,10 @@ async function fetchData(domain) {
 
         // Tratar os dados retornados
         const whois = {};
+        const dataA2 = data3;
         const dataA1 = data1.filter(obj => obj.record_type === "A" || obj.record_type === "AAAA")
         const dataSOA = data1.filter(obj => obj.record_type === "SOA")
-        const dataA2 = data3;
+        let SPF = data1.filter(obj => obj.record_type === "TXT")
 
 
         if (data2.hasOwnProperty('domain_name')) {
@@ -124,7 +125,6 @@ async function fetchData(domain) {
 
         const tableBody = document.getElementById('tbody');
         dataA1.forEach(obj => {
-
             const row = document.createElement('tr');
             const cell1 = document.createElement('td');
             cell1.textContent = domain.replace(/www./g, '');
@@ -208,6 +208,31 @@ async function fetchData(domain) {
             span.className = 'text-success'
         }
 
+        if(Object.keys(SPF).length != 0){
+            SPF.forEach(obj => {
+                const row = document.createElement('tr');
+                const cell1 = document.createElement('td');
+                cell1.textContent = domain.replace(/www./g, '');
+                const cell2 = document.createElement('td');
+                cell2.textContent = obj.record_type;
+                const cell3 = document.createElement('td');
+                cell3.textContent = obj.value;
+                cell1.className = 'd-none'
+                cell2.className = 'd-none'
+                cell3.className = 'd-none'
+                cell1.setAttribute('name', 'SPF');
+                cell2.setAttribute('name', 'SPF');
+                cell3.setAttribute('name', 'SPF');
+                row.append(cell1, cell2, cell3);  
+                tableBody.appendChild(row);
+                var btnSPF = document.getElementById('spf');
+                btnSPF.classList.remove('d-none')
+            });
+        }else{
+            var btnSPF = document.getElementById('spf');
+            btnSPF.classList.add('d-none')
+        }
+
 
             console.log(dataSOA);
             console.log(whois);
@@ -233,6 +258,23 @@ async function fetchData(domain) {
                 document.getElementById('data1').innerText = JSON.stringify(data1, null, 2)
                 document.getElementById('data2').innerText = JSON.stringify(data2, null, 2)
                 document.getElementById('data3').innerText = JSON.stringify(data3, null, 2)
+            });
+            document.getElementById('spf').addEventListener("click", function(event) {
+                const cells = document.getElementsByName('SPF')
+                for(obj in cells){
+                    cells[obj].className = 'SPF'
+                }
+                document.getElementById('spfhide').classList.remove('d-none')
+                document.getElementById('spf').classList.add('d-none')
+
+            });
+            document.getElementById('spfhide').addEventListener("click", function(event) {
+                const cells = document.getElementsByName('SPF')
+                for(var obj of cells){
+                    obj.className = 'd-none SPF'
+                };
+                document.getElementById('spfhide').classList.add('d-none')
+                document.getElementById('spf').classList.remove('d-none')
             });
         }
 
@@ -295,7 +337,9 @@ async function fetchData(domain) {
 
                     const dataA1 = data1.filter(obj => obj.record_type === "A" || obj.record_type === "AAAA" || obj.record_type === "CNAME" )
                     const dataSOA = data1.filter(obj => obj.record_type === "SOA")
+                    let SPF = data1.filter(obj => obj.record_type === "TXT")
                     const dataA2 = data2;
+
                     console.log(data1)
                     console.log(data2)
 
@@ -343,6 +387,31 @@ async function fetchData(domain) {
                         row.append(cell1, cell2, cell3);  
                         tableBody.appendChild(row);
                     });
+
+                    if(Object.keys(SPF).length != 0){
+                        SPF.forEach(obj => {
+                            const row = document.createElement('tr');
+                            const cell1 = document.createElement('td');
+                            cell1.textContent = domain.replace(/www./g, '');
+                            const cell2 = document.createElement('td');
+                            cell2.textContent = obj.record_type;
+                            const cell3 = document.createElement('td');
+                            cell3.textContent = obj.value;
+                            cell1.className = 'd-none'
+                            cell2.className = 'd-none'
+                            cell3.className = 'd-none'
+                            cell1.setAttribute('name', 'SPF');
+                            cell2.setAttribute('name', 'SPF');
+                            cell3.setAttribute('name', 'SPF');
+                            row.append(cell1, cell2, cell3);  
+                            tableBody.appendChild(row);
+                            var btnSPF = document.getElementById('spf');
+                            btnSPF.classList.remove('d-none')
+                        });
+                    }else{
+                        var btnSPF = document.getElementById('spf');
+                        btnSPF.classList.add('d-none')
+                    }
             
                     if(Object.keys(data1).length != 0 || Object.keys(data2).length != 0){
                         var span = document.getElementById('status')
@@ -372,6 +441,23 @@ async function fetchData(domain) {
                         document.getElementById('data1').innerText = JSON.stringify(data1, null, 2)
                         document.getElementById('data2').innerText = 'Internal Server ERROR 502'
                         document.getElementById('data3').innerText = JSON.stringify(data2, null, 2)
+                    });
+                    document.getElementById('spf').addEventListener("click", function(event) {
+                        const cells = document.getElementsByName('SPF')
+                        for(obj in cells){
+                            cells[obj].className = 'SPF'
+                        }
+                        document.getElementById('spfhide').classList.remove('d-none')
+                        document.getElementById('spf').classList.add('d-none')
+        
+                    });
+                    document.getElementById('spfhide').addEventListener("click", function(event) {
+                        const cells = document.getElementsByName('SPF')
+                        for(var obj of cells){
+                            obj.className = 'd-none SPF'
+                        };
+                        document.getElementById('spfhide').classList.add('d-none')
+                        document.getElementById('spf').classList.remove('d-none')
                     });
                 }
             }catch(error){
