@@ -49,7 +49,7 @@ async function fetchData(domain) {
                 fetch(`https://api.api-ninjas.com/v1/dnslookup?domain=${domain}`, fetchOptions)
             ]);
         }
-
+        
         const data1 = await response1.json();
         const data2 = await response2.json();
         const data3 = await response3.json();
@@ -153,20 +153,6 @@ async function fetchData(domain) {
             tableBody.appendChild(row);
         })
 
-
-
-
-
-        // const row2 = document.createElement('tr');
-        // const cell4 = document.createElement('td');
-        // cell4.textContent = domain.replace(/www./g, '');
-        // const cell5 = document.createElement('td');
-        // cell5.textContent = dataSOA[1].record_type;
-        // const cell6 = document.createElement('td');
-        // cell6.textContent = dataSOA[1].rname;
-        // row2.append(cell4, cell5, cell6);
-        // tableBody.appendChild(row2);
-
         dataA2.forEach(obj => {
             const row = document.createElement('tr');
             const cell1 = document.createElement('td');
@@ -252,16 +238,154 @@ async function fetchData(domain) {
 
     } catch (error) {
         // Lidar com erros das requisições
-        console.error(error);
-        var table = document.getElementById('response')
-        var search = document.getElementById('domain')
-        var loading = document.getElementById('loading')
-        table.classList.add('d-none')
-        loading.classList.add('d-none')
-        search.disabled = false
-        alert('Ops, Não deu muito certo. Objeto está quebrado ou o site não existe')
-        console.log(data1);
-        console.log(data2);
-        console.log(data3);
+        if(error = 'TypeError: Failed to fetch'){
+            try {
+                const headers = new Headers();
+                headers.append('X-Api-Key', 'ByduyQKyd0LYUTaFhwD+6w==JXgDqGmcQfSKyB8D');
+        
+                const fetchOptions = {
+                    method: 'GET',
+                    headers: headers
+                };
+        
+                var response1, response2;
+        
+                if (domain.substr(0, 3) !== 'www') {
+                    [response1, response2] = await Promise.all([
+                        fetch(`https://api.api-ninjas.com/v1/dnslookup?domain=${domain}`, fetchOptions),
+                        fetch(`https://api.api-ninjas.com/v1/dnslookup?domain=www.${domain}`, fetchOptions)
+                    ]);
+                } else {
+                    [response1, response2] = await Promise.all([
+                        fetch(`https://api.api-ninjas.com/v1/dnslookup?domain=${domain.replace(/www./g, '')}`, fetchOptions),
+                        fetch(`https://api.api-ninjas.com/v1/dnslookup?domain=${domain}`, fetchOptions)
+                    ]);
+                }
+                
+                const data1 = await response1.json();
+                const data2 = await response2.json();
+
+                if(Object.keys(data1).length == 0 && Object.keys(data2).length == 0){
+                    var response4;
+                    response4 = await fetch(`https://domain-availability.whoisxmlapi.com/api/v1?apiKey=at_irdYx1MF7meC5ZcvweodrGBeYJchA&domainName=${domain.replace(/www./g, '')}&credits=DA`,{
+                        method: 'GET'
+                    })
+        
+                    const data4 = await response4.json();
+                    console.log(data4)
+                    if(data4.DomainInfo.domainAvailability == "AVAILABLE"){
+                        var loading = document.getElementById('loading')
+                        var table = document.getElementById('response')
+                        var json = document.getElementById('show-json')
+                        var search = document.getElementById('domain')
+                        loading.classList.add('d-none')
+                        table.classList.add('d-none')
+                        search.disabled = false
+                        document.getElementById('buy-domain').classList.remove('d-none')
+                        document.getElementById('domain-available').textContent = domain.replace(/www./g, '')
+                    }else{
+                        alert('Opa, esse dominio não tá disponível para compra e não possui dados em nenhuma API')
+                        var search = document.getElementById('domain')
+                        var loading = document.getElementById('loading')
+                        search.disabled = false
+                        loading.classList.add('d-none')
+                    }
+        
+                }else{
+
+                    const dataA1 = data1.filter(obj => obj.record_type === "A" || obj.record_type === "AAAA" || obj.record_type === "CNAME" )
+                    const dataSOA = data1.filter(obj => obj.record_type === "SOA")
+                    const dataA2 = data2;
+                    console.log(data1)
+                    console.log(data2)
+
+
+        
+                    const tableBody = document.getElementById('tbody');
+                    dataA1.forEach(obj => {
+                        const row = document.createElement('tr');
+                        const cell1 = document.createElement('td');
+                        cell1.textContent = domain.replace(/www./g, '');
+                        const cell2 = document.createElement('td');
+                        cell2.textContent = obj.record_type;
+                        const cell3 = document.createElement('td');
+                        cell3.textContent = obj.value;
+                        if(obj.record_type == 'AAAA'){
+                            cell1.className = 'fw-bold text-warning';
+                            cell2.className = 'fw-bold text-warning';
+                            cell3.className = 'fw-bold text-warning';
+                        }
+                        row.append(cell1, cell2, cell3);
+                        tableBody.appendChild(row);
+                    })
+
+                    dataSOA.forEach(obj => {
+                        const row = document.createElement('tr');
+                        const cell1 = document.createElement('td');
+                        cell1.textContent = domain.replace(/www./g, '');
+                        const cell2 = document.createElement('td');
+                        cell2.textContent = obj.record_type;
+                        const cell3 = document.createElement('td');
+                        cell3.textContent = obj.rname;
+                        row.append(cell1, cell2, cell3);
+                        tableBody.appendChild(row);
+                    })
+
+
+                    dataA2.forEach(obj => {
+                        const row = document.createElement('tr');
+                        const cell1 = document.createElement('td');
+                        cell1.textContent = 'www.'+domain.replace(/www./g, '');
+                        const cell2 = document.createElement('td');
+                        cell2.textContent = obj.record_type;
+                        const cell3 = document.createElement('td');
+                        cell3.textContent = obj.value;
+                        row.append(cell1, cell2, cell3);  
+                        tableBody.appendChild(row);
+                    });
+            
+                    if(Object.keys(data1).length != 0 || Object.keys(data2).length != 0){
+                        var span = document.getElementById('status')
+                        span.textContent = 'ATIVO'
+                        span.className = 'text-success'
+                    }else{
+                        var span = document.getElementById('status')
+                        span.textContent = 'SEM DADOS'
+                        span.className = 'text-info'
+                    }
+
+                    console.log('Continuando com o código...');
+                    var search = document.getElementById('domain')
+                    var h3 = document.getElementById('domain-name')
+                    var table = document.getElementById('response')
+                    var loading = document.getElementById('loading')
+                    var json = document.getElementById('show-json')
+                    loading.classList.add('d-none')
+                    json.classList.add('d-none')
+                    h3.textContent = domain.replace(/www./g, '');
+                    table.classList.remove('d-none')
+                    search.disabled = false
+
+                    document.getElementById('json').addEventListener("click", function(event) {
+                        table.classList.add('d-none')
+                        json.classList.remove('d-none')
+                        document.getElementById('data1').innerText = JSON.stringify(data1, null, 2)
+                        document.getElementById('data2').innerText = 'Internal Server ERROR 502'
+                        document.getElementById('data3').innerText = JSON.stringify(data2, null, 2)
+                    });
+                }
+            }catch(error){
+                var table = document.getElementById('response')
+                var search = document.getElementById('domain')
+                var loading = document.getElementById('loading')
+                table.classList.add('d-none')
+                loading.classList.add('d-none')
+                search.disabled = false
+                alert('Ops, Não deu muito certo. Objeto está quebrado ou o site não existe')
+                console.log(data1);
+                console.log(data2);
+            }
+        }
+
     }
-    }
+}
