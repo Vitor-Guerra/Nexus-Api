@@ -54,7 +54,7 @@ async function fetchData(domain) {
         const data2 = await response2.json();
         const data3 = await response3.json();
 
-        if(Object.keys(data1).length == 0){
+        if(Object.keys(data1).length == 0 && Object.keys(data2).length == 0){
             var response4;
             response4 = await fetch(`https://domain-availability.whoisxmlapi.com/api/v1?apiKey=at_irdYx1MF7meC5ZcvweodrGBeYJchA&domainName=${domain.replace(/www./g, '')}&credits=DA`,{
                 method: 'GET'
@@ -216,7 +216,7 @@ async function fetchData(domain) {
             tableBody.appendChild(row);
         });
 
-        if(Object.keys(whois).length == 0){
+        if(Object.keys(whois).length == 0 || Object.keys(data1).length == 0){
             var span = document.getElementById('status')
             span.textContent = 'ATIVO'
             span.className = 'text-success'
