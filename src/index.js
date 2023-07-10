@@ -475,3 +475,13 @@ async function fetchData(domain) {
 
     }
 }
+
+function welcomeMessage(){
+    const myModal = new bootstrap.Modal(document.getElementById("welcomeModal"), {});
+    myModal.show();
+    localStorage.setItem('welcomeMessage', 'true')
+}
+
+if(!localStorage.getItem('welcomeMessage')){
+    welcomeMessage()
+}

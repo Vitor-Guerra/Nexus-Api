@@ -53,9 +53,51 @@ td{
 pre{
     color: #f0f0f0;
 }
+
 .black-nav{
     color: #f0f0f0;
 }
+
+.black-bg{
+  background-color: #2d2d2d;
+}
+
+.float{
+	position:fixed;
+	width:60px;
+	height:60px;
+	bottom:40px;
+	right:40px;
+	background-color:#25d366;
+	color:#FFF;
+	border-radius:50px;
+	text-align:center;
+  font-size:30px;
+	box-shadow: 2px 2px 3px #999;
+  z-index:100;
+  text-decoration: none;
+}
+
+.float:hover{
+  color: rgb(68, 68, 68);
+}
+
+.float:visited{
+  color: #FFF;
+}
+
+.my-float{
+	margin-top:16px;
+}
+
+.tienda{
+  color: #00ffd2;
+}
+
+.whois{
+  color: #ff04f2;
+}
+
 .spinner {
     margin: 100px auto;
     width: 50px;
