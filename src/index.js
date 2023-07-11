@@ -202,7 +202,7 @@ async function fetchData(domain) {
             tableBody.appendChild(row);
         });
 
-        if(Object.keys(whois).length == 0 || Object.keys(data1).length == 0){
+        if(Object.keys(whois).length == 0 && Object.keys(data1).length == 0){
             var span = document.getElementById('status')
             span.textContent = 'ATIVO'
             span.className = 'text-success'
