@@ -44,7 +44,7 @@ async function fetchData(domain) {
             ]);
         } else {
             [response1, response2, response3] = await Promise.all([
-                fetch(`https://api.api-ninjas.com/v1/dnslookup?domain=${domain.replace(/www./g, '')}`, fetchOptions),
+                fetch(`https://api.api-ninjas.com/v1/dnslookup?domain=${domain.replace(/www\./g, '')}`, fetchOptions),
                 fetch(`https://api.api-ninjas.com/v1/whois?domain=${domain}`, fetchOptions),
                 fetch(`https://api.api-ninjas.com/v1/dnslookup?domain=${domain}`, fetchOptions)
             ]);
@@ -60,7 +60,7 @@ async function fetchData(domain) {
 
         if(Object.keys(data1).length == 0 && Object.keys(data2).length == 0){
             var response4;
-            response4 = await fetch(`https://domain-availability.whoisxmlapi.com/api/v1?apiKey=at_irdYx1MF7meC5ZcvweodrGBeYJchA&domainName=${domain.replace(/www./g, '')}&credits=DA`,{
+            response4 = await fetch(`https://domain-availability.whoisxmlapi.com/api/v1?apiKey=at_irdYx1MF7meC5ZcvweodrGBeYJchA&domainName=${domain.replace(/www\./g, '')}&credits=DA`,{
                 method: 'GET'
             })
 
@@ -75,7 +75,7 @@ async function fetchData(domain) {
                 table.classList.add('d-none')
                 search.disabled = false
                 document.getElementById('buy-domain').classList.remove('d-none')
-                document.getElementById('domain-available').textContent = domain.replace(/www./g, '')
+                document.getElementById('domain-available').textContent = domain.replace(/www\./g, '')
             }else{
                 alert('Opa, esse dominio não tá disponível para compra e não possui dados no whois')
                 var search = document.getElementById('domain')
@@ -138,7 +138,7 @@ async function fetchData(domain) {
         dataA1.forEach(obj => {
             const row = document.createElement('tr');
             const cell1 = document.createElement('td');
-            cell1.textContent = domain.replace(/www./g, '');
+            cell1.textContent = domain.replace(/www\./g, '');
             const cell2 = document.createElement('td');
             cell2.textContent = obj.record_type;
             const cell3 = document.createElement('td');
@@ -155,7 +155,7 @@ async function fetchData(domain) {
         dataSOA.forEach(obj => {
             const row = document.createElement('tr');
             const cell1 = document.createElement('td');
-            cell1.textContent = domain.replace(/www./g, '');
+            cell1.textContent = domain.replace(/www\./g, '');
             const cell2 = document.createElement('td');
             cell2.textContent = obj.record_type;
             const cell3 = document.createElement('td');
@@ -167,7 +167,7 @@ async function fetchData(domain) {
         dataA2.forEach(obj => {
             const row = document.createElement('tr');
             const cell1 = document.createElement('td');
-            cell1.textContent = 'www.'+domain.replace(/www./g, '');
+            cell1.textContent = 'www.'+domain.replace(/www\./g, '');
             const cell2 = document.createElement('td');
             cell2.textContent = obj.record_type;
             const cell3 = document.createElement('td');
@@ -191,7 +191,7 @@ async function fetchData(domain) {
         Object.entries(whois).forEach(([chave, valor]) => {
             const row = document.createElement('tr');
             const cell1 = document.createElement('td');
-            cell1.textContent = domain.replace(/www./g, '');
+            cell1.textContent = domain.replace(/www\./g, '');
             const cell2 = document.createElement('td');
             cell2.textContent = chave;
             const cell3 = document.createElement('td');
@@ -235,7 +235,7 @@ async function fetchData(domain) {
             SPF.forEach(obj => {
                 const row = document.createElement('tr');
                 const cell1 = document.createElement('td');
-                cell1.textContent = domain.replace(/www./g, '');
+                cell1.textContent = domain.replace(/www\./g, '');
                 const cell2 = document.createElement('td');
                 cell2.textContent = obj.record_type;
                 const cell3 = document.createElement('td');
@@ -275,7 +275,7 @@ async function fetchData(domain) {
             var json = document.getElementById('show-json')
             loading.classList.add('d-none')
             json.classList.add('d-none')
-            h3.textContent = domain.replace(/www./g, '');
+            h3.textContent = domain.replace(/www\./g, '');
             table.classList.remove('d-none')
             search.disabled = false
 
@@ -326,7 +326,7 @@ async function fetchData(domain) {
                 ]);
             } else {
                 [response1, response2] = await Promise.all([
-                    fetch(`https://api.api-ninjas.com/v1/dnslookup?domain=${domain.replace(/www./g, '')}`, fetchOptions),
+                    fetch(`https://api.api-ninjas.com/v1/dnslookup?domain=${domain.replace(/www\./g, '')}`, fetchOptions),
                     fetch(`https://api.api-ninjas.com/v1/dnslookup?domain=${domain}`, fetchOptions)
                 ]);
             }
@@ -336,7 +336,7 @@ async function fetchData(domain) {
 
             if(Object.keys(data1).length == 0 && Object.keys(data2).length == 0){
                 var response4;
-                response4 = await fetch(`https://domain-availability.whoisxmlapi.com/api/v1?apiKey=at_irdYx1MF7meC5ZcvweodrGBeYJchA&domainName=${domain.replace(/www./g, '')}&credits=DA`,{
+                response4 = await fetch(`https://domain-availability.whoisxmlapi.com/api/v1?apiKey=at_irdYx1MF7meC5ZcvweodrGBeYJchA&domainName=${domain.replace(/www\./g, '')}&credits=DA`,{
                     method: 'GET'
                 })
     
@@ -351,7 +351,7 @@ async function fetchData(domain) {
                     table.classList.add('d-none')
                     search.disabled = false
                     document.getElementById('buy-domain').classList.remove('d-none')
-                    document.getElementById('domain-available').textContent = domain.replace(/www./g, '')
+                    document.getElementById('domain-available').textContent = domain.replace(/www\./g, '')
                 }else{
                     alert('Opa, esse dominio não tá disponível para compra e não possui dados em nenhuma API')
                     var search = document.getElementById('domain')
@@ -376,7 +376,7 @@ async function fetchData(domain) {
                 dataA1.forEach(obj => {
                     const row = document.createElement('tr');
                     const cell1 = document.createElement('td');
-                    cell1.textContent = domain.replace(/www./g, '');
+                    cell1.textContent = domain.replace(/www\./g, '');
                     const cell2 = document.createElement('td');
                     cell2.textContent = obj.record_type;
                     const cell3 = document.createElement('td');
@@ -393,7 +393,7 @@ async function fetchData(domain) {
                 dataSOA.forEach(obj => {
                     const row = document.createElement('tr');
                     const cell1 = document.createElement('td');
-                    cell1.textContent = domain.replace(/www./g, '');
+                    cell1.textContent = domain.replace(/www\./g, '');
                     const cell2 = document.createElement('td');
                     cell2.textContent = obj.record_type;
                     const cell3 = document.createElement('td');
@@ -406,7 +406,7 @@ async function fetchData(domain) {
                 dataA2.forEach(obj => {
                     const row = document.createElement('tr');
                     const cell1 = document.createElement('td');
-                    cell1.textContent = 'www.'+domain.replace(/www./g, '');
+                    cell1.textContent = 'www.'+domain.replace(/www\./g, '');
                     const cell2 = document.createElement('td');
                     cell2.textContent = obj.record_type;
                     const cell3 = document.createElement('td');
@@ -432,7 +432,7 @@ async function fetchData(domain) {
                     SPF.forEach(obj => {
                         const row = document.createElement('tr');
                         const cell1 = document.createElement('td');
-                        cell1.textContent = domain.replace(/www./g, '');
+                        cell1.textContent = domain.replace(/www\./g, '');
                         const cell2 = document.createElement('td');
                         cell2.textContent = obj.record_type;
                         const cell3 = document.createElement('td');
@@ -475,7 +475,7 @@ async function fetchData(domain) {
                 var json = document.getElementById('show-json')
                 loading.classList.add('d-none')
                 json.classList.add('d-none')
-                h3.textContent = domain.replace(/www./g, '');
+                h3.textContent = domain.replace(/www\./g, '');
                 table.classList.remove('d-none')
                 search.disabled = false
 
@@ -517,14 +517,14 @@ async function fetchData(domain) {
                 var response1;
         
                 [response1] = await Promise.all([
-                    fetch(`https://api.api-ninjas.com/v1/whois?domain=${domain.replace(/www./g, '')}`, fetchOptions),
+                    fetch(`https://api.api-ninjas.com/v1/whois?domain=${domain.replace(/www\./g, '')}`, fetchOptions),
                 ]);
                 
                 const data1 = await response1.json();
 
                 if(Object.keys(data1).length == 0){
                     var response4;
-                    response4 = await fetch(`https://domain-availability.whoisxmlapi.com/api/v1?apiKey=at_irdYx1MF7meC5ZcvweodrGBeYJchA&domainName=${domain.replace(/www./g, '')}&credits=DA`,{
+                    response4 = await fetch(`https://domain-availability.whoisxmlapi.com/api/v1?apiKey=at_irdYx1MF7meC5ZcvweodrGBeYJchA&domainName=${domain.replace(/www\./g, '')}&credits=DA`,{
                         method: 'GET'
                     })
         
@@ -539,7 +539,7 @@ async function fetchData(domain) {
                         table.classList.add('d-none')
                         search.disabled = false
                         document.getElementById('buy-domain').classList.remove('d-none')
-                        document.getElementById('domain-available').textContent = domain.replace(/www./g, '')
+                        document.getElementById('domain-available').textContent = domain.replace(/www\./g, '')
                     }else{
                         alert('Opa, esse dominio não tá disponível para compra e não possui dados em nenhuma API')
                         var search = document.getElementById('domain')
@@ -601,7 +601,7 @@ async function fetchData(domain) {
                     Object.entries(whois).forEach(([chave, valor]) => {
                         const row = document.createElement('tr');
                         const cell1 = document.createElement('td');
-                        cell1.textContent = domain.replace(/www./g, '');
+                        cell1.textContent = domain.replace(/www\./g, '');
                         const cell2 = document.createElement('td');
                         cell2.textContent = chave;
                         const cell3 = document.createElement('td');
@@ -656,7 +656,7 @@ async function fetchData(domain) {
                     var json = document.getElementById('show-json')
                     loading.classList.add('d-none')
                     json.classList.add('d-none')
-                    h3.textContent = domain.replace(/www./g, '');
+                    h3.textContent = domain.replace(/www\./g, '');
                     table.classList.remove('d-none')
                     search.disabled = false
 
