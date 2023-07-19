@@ -105,7 +105,8 @@ async function fetchData(domain) {
         if (data2.hasOwnProperty('creation_date')) {
             var creationDateInSeconds;
             if(typeof(data2.creation_date) == 'object'){
-                creationDateInSeconds = data2.creation_date[data2.creation_date.length - 1];
+                var orderCre = data2.creation_date.sort((a, b) => b - a)
+                creationDateInSeconds = orderCre[0];
             }else{
                 creationDateInSeconds = data2.creation_date
             }
@@ -120,7 +121,8 @@ async function fetchData(domain) {
         if (data2.hasOwnProperty('expiration_date')) {
             var expirationDateInSeconds = data2.expiration_date;
             if(typeof(data2.expiration_date) == 'object'){
-                expirationDateInSeconds = data2.expiration_date[0];
+                var orderExp = data2.expiration_date.sort((a, b) => a - b)
+                expirationDateInSeconds = orderExp[0];
             }else{
                 expirationDateInSeconds = data2.expiration_date
             }
@@ -203,8 +205,8 @@ async function fetchData(domain) {
                 const mes = parseInt(partes[1], 10) - 1; 
                 const ano = parseInt(partes[2], 10);
                 const expDate = new Date(ano, mes, dia);
-                console.log(expDate.getTime())
-                console.log(dataMilissegundos);
+                // console.log(expDate.getTime())
+                // console.log(dataMilissegundos);
                 if(dataMilissegundos >= expDate.getTime()){
                     cell1.className = 'fw-bold text-danger'
                     cell2.className = 'fw-bold text-danger'
@@ -228,7 +230,7 @@ async function fetchData(domain) {
             span.textContent = 'ATIVO'
             span.className = 'text-success'
         }
-console.log(SPF)
+// console.log(SPF)
         if(Object.keys(SPF).length != 0){
             SPF.forEach(obj => {
                 const row = document.createElement('tr');
@@ -419,13 +421,13 @@ console.log(SPF)
                     }
                     if(obj.record_type == 'CNAME'){
                         cell3.textContent = obj.value.substr(0, [obj.value.split('').length -1])
-                        console.log(obj.value.substr(0, [obj.value.split('').length -1]))
+                        // console.log(obj.value.substr(0, [obj.value.split('').length -1]))
                     }
                     row.append(cell1, cell2, cell3);  
                     tableBody.appendChild(row);
                 });
 
-                console.log(SPF)
+                // console.log(SPF)
                 if(Object.keys(SPF).length != 0){
                     SPF.forEach(obj => {
                         const row = document.createElement('tr');
@@ -566,7 +568,8 @@ console.log(SPF)
                     if (data1.hasOwnProperty('creation_date')) {
                         var creationDateInSeconds;
                         if(typeof(data1.creation_date) == 'object'){
-                            creationDateInSeconds = data1.creation_date[data1.creation_date.length - 1];
+                            var orderCre = data1.creation_date.sort((a, b) => b - a)
+                            creationDateInSeconds = orderCre[0];
                         }else{
                             creationDateInSeconds = data1.creation_date
                         }
@@ -581,7 +584,8 @@ console.log(SPF)
                     if (data1.hasOwnProperty('expiration_date')) {
                         var expirationDateInSeconds = data1.expiration_date;
                         if(typeof(data1.expiration_date) == 'object'){
-                            expirationDateInSeconds = data1.expiration_date[0];
+                            var orderExp = data2.expiration_date.sort((a, b) => a - b)
+                            expirationDateInSeconds = orderExp[0];
                         }else{
                             expirationDateInSeconds = data1.expiration_date
                         }
@@ -611,8 +615,8 @@ console.log(SPF)
                             const mes = parseInt(partes[1], 10) - 1; 
                             const ano = parseInt(partes[2], 10);
                             const expDate = new Date(ano, mes, dia);
-                            console.log(expDate.getTime())
-                            console.log(dataMilissegundos);
+                            // console.log(expDate.getTime())
+                            // console.log(dataMilissegundos);
                             if(dataMilissegundos >= expDate.getTime()){
                                 cell1.className = 'fw-bold text-danger'
                                 cell2.className = 'fw-bold text-danger'
