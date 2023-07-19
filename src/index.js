@@ -53,6 +53,10 @@ async function fetchData(domain) {
         const data1 = await response1.json();
         const data2 = await response2.json();
         const data3 = await response3.json();
+        console.log(data1)
+        console.log(data2)
+        console.log(data3)
+
 
         if(Object.keys(data1).length == 0 && Object.keys(data2).length == 0){
             var response4;
@@ -161,6 +165,10 @@ async function fetchData(domain) {
             cell2.textContent = obj.record_type;
             const cell3 = document.createElement('td');
             cell3.textContent = obj.value;
+            if(obj.record_type == 'CNAME'){
+                cell3.textContent = obj.value.substr(0, [obj.value.split('').length -1])
+                console.log(obj.value.substr(0, [obj.value.split('').length -1]))
+            }
             row.append(cell1, cell2, cell3);  
             tableBody.appendChild(row);
         });
@@ -207,7 +215,7 @@ async function fetchData(domain) {
             span.textContent = 'ATIVO'
             span.className = 'text-success'
         }
-
+console.log(SPF)
         if(Object.keys(SPF).length != 0){
             SPF.forEach(obj => {
                 const row = document.createElement('tr');
@@ -226,17 +234,21 @@ async function fetchData(domain) {
                 row.append(cell1, cell2, cell3);  
                 tableBody.appendChild(row);
                 var btnSPF = document.getElementById('spf');
+                var btnSPFhide = document.getElementById('spfhide');
+                btnSPFhide.classList.add('d-none')
                 btnSPF.classList.remove('d-none')
             });
         }else{
             var btnSPF = document.getElementById('spf');
+            var btnSPFhide = document.getElementById('spfhide');
+            btnSPFhide.classList.add('d-none')
             btnSPF.classList.add('d-none')
         }
 
 
-            console.log(dataSOA);
-            console.log(whois);
-            console.log(data3);
+            // console.log(dataSOA);
+            // console.log(whois);
+            // console.log(data3);
 
 
             // Prosseguir com o código após o retorno das duas requisições Fetch
@@ -335,7 +347,7 @@ async function fetchData(domain) {
     
             }else{
 
-                const dataA1 = data1.filter(obj => obj.record_type === "A" || obj.record_type === "AAAA" || obj.record_type === "CNAME" )
+                const dataA1 = data1.filter(obj => obj.record_type === "A" || obj.record_type === "AAAA")
                 const dataSOA = data1.filter(obj => obj.record_type === "SOA")
                 let SPF = data1.filter(obj => obj.record_type === "TXT")
                 const dataA2 = data2;
@@ -384,10 +396,15 @@ async function fetchData(domain) {
                     cell2.textContent = obj.record_type;
                     const cell3 = document.createElement('td');
                     cell3.textContent = obj.value;
+                    if(obj.record_type == 'CNAME'){
+                        cell3.textContent = obj.value.substr(0, [obj.value.split('').length -1])
+                        console.log(obj.value.substr(0, [obj.value.split('').length -1]))
+                    }
                     row.append(cell1, cell2, cell3);  
                     tableBody.appendChild(row);
                 });
 
+                console.log(SPF)
                 if(Object.keys(SPF).length != 0){
                     SPF.forEach(obj => {
                         const row = document.createElement('tr');
@@ -406,10 +423,14 @@ async function fetchData(domain) {
                         row.append(cell1, cell2, cell3);  
                         tableBody.appendChild(row);
                         var btnSPF = document.getElementById('spf');
+                        var btnSPFhide = document.getElementById('spfhide');
+                        btnSPFhide.classList.add('d-none')
                         btnSPF.classList.remove('d-none')
                     });
                 }else{
                     var btnSPF = document.getElementById('spf');
+                    var btnSPFhide = document.getElementById('spfhide');
+                    btnSPFhide.classList.add('d-none')
                     btnSPF.classList.add('d-none')
                 }
         
