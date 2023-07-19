@@ -118,13 +118,18 @@ async function fetchData(domain) {
         }
         
         if (data2.hasOwnProperty('expiration_date')) {
-          const expirationDateInSeconds = data2.expiration_date;
-          const expirationDateInMilliseconds = expirationDateInSeconds * 1000;
-          const new_date = new Date(expirationDateInMilliseconds)
-          const dia = String(new_date.getDate()).padStart(2, '0');
-          const mes = String(new_date.getMonth() + 1).padStart(2, '0');
-          const ano = new_date.getFullYear();
-          whois.expiration_date = `${dia}/${mes}/${ano}`;
+            var expirationDateInSeconds = data2.expiration_date;
+            if(typeof(data2.expiration_date) == 'object'){
+                expirationDateInSeconds = data2.expiration_date[0];
+            }else{
+                expirationDateInSeconds = data2.expiration_date
+            }
+            const expirationDateInMilliseconds = expirationDateInSeconds * 1000;
+            const new_date = new Date(expirationDateInMilliseconds)
+            const dia = String(new_date.getDate()).padStart(2, '0');
+            const mes = String(new_date.getMonth() + 1).padStart(2, '0');
+            const ano = new_date.getFullYear();
+            whois.expiration_date = `${dia}/${mes}/${ano}`;
         }
 
         const tableBody = document.getElementById('tbody');
@@ -164,7 +169,15 @@ async function fetchData(domain) {
             const cell2 = document.createElement('td');
             cell2.textContent = obj.record_type;
             const cell3 = document.createElement('td');
-            cell3.textContent = obj.value;
+            if(obj.value == null || obj.value == undefined){
+                if(obj.record_type === 'SOA'){
+                    cell3.textContent = obj.rname
+                }else{
+                    cell3.textContent = 'Consulte no JSON'
+                }
+            }else{
+                cell3.textContent = obj.value;
+            }
             if(obj.record_type == 'CNAME'){
                 cell3.textContent = obj.value.substr(0, [obj.value.split('').length -1])
                 console.log(obj.value.substr(0, [obj.value.split('').length -1]))
@@ -395,7 +408,15 @@ console.log(SPF)
                     const cell2 = document.createElement('td');
                     cell2.textContent = obj.record_type;
                     const cell3 = document.createElement('td');
-                    cell3.textContent = obj.value;
+                    if(obj.value == null || obj.value == undefined){
+                        if(obj.record_type === 'SOA'){
+                            cell3.textContent = obj.rname
+                        }else{
+                            cell3.textContent = 'Consulte no JSON'
+                        }
+                    }else{
+                        cell3.textContent = obj.value;
+                    }
                     if(obj.record_type == 'CNAME'){
                         cell3.textContent = obj.value.substr(0, [obj.value.split('').length -1])
                         console.log(obj.value.substr(0, [obj.value.split('').length -1]))
@@ -558,7 +579,12 @@ console.log(SPF)
                     }
                     
                     if (data1.hasOwnProperty('expiration_date')) {
-                        const expirationDateInSeconds = data1.expiration_date;
+                        var expirationDateInSeconds = data1.expiration_date;
+                        if(typeof(data1.expiration_date) == 'object'){
+                            expirationDateInSeconds = data1.expiration_date[0];
+                        }else{
+                            expirationDateInSeconds = data1.expiration_date
+                        }
                         const expirationDateInMilliseconds = expirationDateInSeconds * 1000;
                         const new_date = new Date(expirationDateInMilliseconds)
                         const dia = String(new_date.getDate()).padStart(2, '0');
