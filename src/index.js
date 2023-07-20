@@ -89,7 +89,7 @@ async function fetchData(domain) {
         // Tratar os dados retornados
         const whois = {};
         const dataA2 = data3;
-        const dataA1 = data1.filter(obj => obj.record_type === "A" || obj.record_type === "AAAA")
+        const dataA1 = data1.filter(obj => obj.record_type === "A" || obj.record_type === "AAAA" || obj.record_type === "CNAME")
         const dataSOA = data1.filter(obj => obj.record_type === "SOA")
         let SPF = data1.filter(obj => obj.record_type === "TXT")
 
@@ -362,7 +362,7 @@ async function fetchData(domain) {
     
             }else{
 
-                const dataA1 = data1.filter(obj => obj.record_type === "A" || obj.record_type === "AAAA")
+                const dataA1 = data1.filter(obj => obj.record_type === "A" || obj.record_type === "AAAA" || obj.record_type === "CNAME")
                 const dataSOA = data1.filter(obj => obj.record_type === "SOA")
                 let SPF = data1.filter(obj => obj.record_type === "TXT")
                 const dataA2 = data2;
