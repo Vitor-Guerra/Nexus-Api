@@ -60,7 +60,7 @@ async function fetchData(domain) {
 
         if(Object.keys(data1).length == 0 && Object.keys(data2).length == 0){
             var response4;
-            response4 = await fetch(`https://domain-availability.whoisxmlapi.com/api/v1?apiKey=at_irdYx1MF7meC5ZcvweodrGBeYJchA&domainName=${domain.replace(/www\./g, '')}&credits=DA`,{
+            response4 = await fetch(`https://domain-availability.whoisxmlapi.com/api/v1?apiKey=at_Mkrawa556cEB3mT4ToNv0e2IBi1oH&domainName=${domain.replace(/www\./g, '')}&credits=DA`,{
                 method: 'GET'
             })
 
@@ -147,6 +147,8 @@ async function fetchData(domain) {
                 cell1.className = 'fw-bold text-warning';
                 cell2.className = 'fw-bold text-warning';
                 cell3.className = 'fw-bold text-warning';
+            }else if(obj.record_type == 'CNAME'){
+                cell3.textContent = obj.value.substr(0, [obj.value.split('').length -1])
             }
             row.append(cell1, cell2, cell3);
             tableBody.appendChild(row);
@@ -385,6 +387,8 @@ async function fetchData(domain) {
                         cell1.className = 'fw-bold text-warning';
                         cell2.className = 'fw-bold text-warning';
                         cell3.className = 'fw-bold text-warning';
+                    }else if(obj.record_type == 'CNAME'){
+                        cell3.textContent = obj.value.substr(0, [obj.value.split('').length -1])
                     }
                     row.append(cell1, cell2, cell3);
                     tableBody.appendChild(row);
@@ -421,7 +425,6 @@ async function fetchData(domain) {
                     }
                     if(obj.record_type == 'CNAME'){
                         cell3.textContent = obj.value.substr(0, [obj.value.split('').length -1])
-                        // console.log(obj.value.substr(0, [obj.value.split('').length -1]))
                     }
                     row.append(cell1, cell2, cell3);  
                     tableBody.appendChild(row);
