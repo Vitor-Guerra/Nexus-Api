@@ -190,6 +190,14 @@ async function fetchData(domain) {
             tableBody.appendChild(row);
         });
 
+        if (dataSOA.length === 0 && data2.hasOwnProperty('name_server')) {
+            try {
+                whois.name_server = data2.name_server[0];
+            } catch (error) {
+                whois.name_server = data2.name_server;                            
+            }
+        }
+
         Object.entries(whois).forEach(([chave, valor]) => {
             const row = document.createElement('tr');
             const cell1 = document.createElement('td');
@@ -567,6 +575,14 @@ async function fetchData(domain) {
                     if (data1.hasOwnProperty('registrant_name')) {
                         whois.registrant_name = data1.registrant_name;
                     }
+
+                    if (data1.hasOwnProperty('name_server')) {
+                        try {
+                            whois.name_server = data1.name_server[0];
+                        } catch (error) {
+                            whois.name_server = data1.name_server;                            
+                        }
+                    }
                     
                     if (data1.hasOwnProperty('creation_date')) {
                         var creationDateInSeconds;
@@ -599,6 +615,8 @@ async function fetchData(domain) {
                         const ano = new_date.getFullYear();
                         whois.expiration_date = `${dia}/${mes}/${ano}`;
                     }
+
+                    
 
 
                     Object.entries(whois).forEach(([chave, valor]) => {
