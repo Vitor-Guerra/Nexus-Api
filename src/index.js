@@ -60,13 +60,13 @@ async function fetchData(domain) {
 
         if(Object.keys(data1).length == 0 && Object.keys(data2).length == 0){
             var response4;
-            response4 = await fetch(`https://domain-availability.whoisxmlapi.com/api/v1?apiKey=at_Mkrawa556cEB3mT4ToNv0e2IBi1oH&domainName=${domain.replace(/www\./g, '')}&credits=DA`,{
+            response4 = await fetch(`http://18.228.11.185:80/${domain.replace(/www\./g, '')}`,{
                 method: 'GET'
             })
 
             const data4 = await response4.json();
             console.log(data4)
-            if(data4.DomainInfo.domainAvailability == "AVAILABLE"){
+            if(data4.DomainStatus == "AVAILABLE"){
                 var loading = document.getElementById('loading')
                 var table = document.getElementById('response')
                 var json = document.getElementById('show-json')
@@ -346,13 +346,13 @@ async function fetchData(domain) {
 
             if(Object.keys(data1).length == 0 && Object.keys(data2).length == 0){
                 var response4;
-                response4 = await fetch(`https://domain-availability.whoisxmlapi.com/api/v1?apiKey=at_irdYx1MF7meC5ZcvweodrGBeYJchA&domainName=${domain.replace(/www\./g, '')}&credits=DA`,{
+                response4 = await fetch(`http://18.228.11.185:80/${domain.replace(/www\./g, '')}`,{
                     method: 'GET'
                 })
     
                 const data4 = await response4.json();
                 console.log(data4)
-                if(data4.DomainInfo.domainAvailability == "AVAILABLE"){
+                if(data4.DomainStatus == "AVAILABLE"){
                     var loading = document.getElementById('loading')
                     var table = document.getElementById('response')
                     var json = document.getElementById('show-json')
@@ -535,13 +535,13 @@ async function fetchData(domain) {
 
                 if(Object.keys(data1).length == 0){
                     var response4;
-                    response4 = await fetch(`https://domain-availability.whoisxmlapi.com/api/v1?apiKey=at_irdYx1MF7meC5ZcvweodrGBeYJchA&domainName=${domain.replace(/www\./g, '')}&credits=DA`,{
+                    response4 = await fetch(`http://18.228.11.185:80/${domain.replace(/www\./g, '')}`,{
                         method: 'GET'
                     })
         
                     const data4 = await response4.json();
                     console.log(data4)
-                    if(data4.DomainInfo.domainAvailability == "AVAILABLE"){
+                    if(data4.DomainStatus == "AVAILABLE"){
                         var loading = document.getElementById('loading')
                         var table = document.getElementById('response')
                         var json = document.getElementById('show-json')
@@ -713,6 +713,15 @@ function welcomeMessage(){
     localStorage.setItem('welcomeMessage', 'true')
 }
 
+function apiMessage(){
+    const myModal = new bootstrap.Modal(document.getElementById("apiMessage"), {});
+    myModal.show();
+    localStorage.setItem('apiMessage', 'true')
+}
+
+
 if(!localStorage.getItem('welcomeMessage')){
     welcomeMessage()
+}else if(!localStorage.getItem('apiMessage')){
+    apiMessage()
 }
