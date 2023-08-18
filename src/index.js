@@ -60,7 +60,7 @@ async function fetchData(domain) {
 
         if(Object.keys(data1).length == 0 && Object.keys(data2).length == 0){
             var response4;
-            response4 = await fetch(`https:nexusapi.online/${domain.replace(/www\./g, '')}`,{
+            response4 = await fetch(`https://nexusapi.online/${domain.replace(/www\./g, '')}`,{
                 method: 'GET'
             })
 
@@ -346,7 +346,7 @@ async function fetchData(domain) {
 
             if(Object.keys(data1).length == 0 && Object.keys(data2).length == 0){
                 var response4;
-                response4 = await fetch(`https:nexusapi.online/${domain.replace(/www\./g, '')}`,{
+                response4 = await fetch(`https://nexusapi.online/${domain.replace(/www\./g, '')}`,{
                     method: 'GET'
                 })
     
@@ -535,7 +535,7 @@ async function fetchData(domain) {
 
                 if(Object.keys(data1).length == 0){
                     var response4;
-                    response4 = await fetch(`https:nexusapi.online/${domain.replace(/www\./g, '')}`,{
+                    response4 = await fetch(`https://nexusapi.online/${domain.replace(/www\./g, '')}`,{
                         method: 'GET'
                     })
         
