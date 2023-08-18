@@ -60,7 +60,7 @@ async function fetchData(domain) {
 
         if(Object.keys(data1).length == 0 && Object.keys(data2).length == 0){
             var response4;
-            response4 = await fetch(`http://18.228.11.185:80/${domain.replace(/www\./g, '')}`,{
+            response4 = await fetch(`https:nexusapi.online/${domain.replace(/www\./g, '')}`,{
                 method: 'GET'
             })
 
@@ -346,7 +346,7 @@ async function fetchData(domain) {
 
             if(Object.keys(data1).length == 0 && Object.keys(data2).length == 0){
                 var response4;
-                response4 = await fetch(`http://18.228.11.185:80/${domain.replace(/www\./g, '')}`,{
+                response4 = await fetch(`https:nexusapi.online/${domain.replace(/www\./g, '')}`,{
                     method: 'GET'
                 })
     
@@ -535,7 +535,7 @@ async function fetchData(domain) {
 
                 if(Object.keys(data1).length == 0){
                     var response4;
-                    response4 = await fetch(`http://18.228.11.185:80/${domain.replace(/www\./g, '')}`,{
+                    response4 = await fetch(`https:nexusapi.online/${domain.replace(/www\./g, '')}`,{
                         method: 'GET'
                     })
         
@@ -716,12 +716,12 @@ function welcomeMessage(){
 function apiMessage(){
     const myModal = new bootstrap.Modal(document.getElementById("apiMessage"), {});
     myModal.show();
-    localStorage.setItem('apiMessage', 'true')
+    localStorage.setItem('apiMessage2', 'true')
 }
 
 
 if(!localStorage.getItem('welcomeMessage')){
     welcomeMessage()
-}else if(!localStorage.getItem('apiMessage')){
-    apiMessage()
+}else if(!localStorage.getItem('apiMessage2')){
+    //apiMessage()
 }
