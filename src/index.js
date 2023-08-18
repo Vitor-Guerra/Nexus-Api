@@ -723,5 +723,5 @@ function apiMessage(){
 if(!localStorage.getItem('welcomeMessage')){
     welcomeMessage()
 }else if(!localStorage.getItem('apiMessage2')){
-    //apiMessage()
+    apiMessage()
 }
