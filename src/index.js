@@ -1,6 +1,6 @@
 document.getElementById('domain').addEventListener("keydown", function(event) {
     if (event.key === 'Enter') {
-        var domain = document.getElementById('domain').value
+        const domain = document.getElementById('domain').value.replace(/ /g, '')
         var search = document.getElementById('domain')
         var loading = document.getElementById('loading')
         var table = document.getElementById('response')
