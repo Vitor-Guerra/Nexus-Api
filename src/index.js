@@ -63,7 +63,7 @@ async function fetchData(dmn){
                 status: data1.status,
                 records: {
                     A: data1.records.A.map(e => e.address),
-                    SOA: data1.records.SOA.map(e => e.nameserver)
+                    SOA: data1.records.SOA.map(e => e.hostmaster)
                 }
             }
             Object.keys(dig.records).forEach(obj => {
@@ -164,8 +164,11 @@ async function fetchData(dmn){
 
 
                 const tableBody = document.getElementById('tbody');
+                const span = document.getElementById('status');
                 const row = Object.keys(whois).map(el => {
                     if(el === 'expires'){
+                        span.textContent = 'CONGELADO'
+                        span.className = 'text-danger'
                         return new Date(whois.expires) < new Date() 
                         ? `
                         <tr>
@@ -180,6 +183,8 @@ async function fetchData(dmn){
                             <td>${whois[el]}</td>
                         </tr>`
                     }else{
+                        span.textContent = 'ATIVO'
+                        span.className = 'text-success'
                         return `
                         <tr>
                             <td>${domain}</td>
@@ -283,39 +288,13 @@ async function fetchData(dmn){
             document.getElementById('buy-domain').classList.remove('d-none')
             document.getElementById('domain-available').textContent = domain
         }else if(Object.keys(jsonWhois).length === 0 && jsonDig.status === 'INVALID_HOST' || jsonDigWww.status === 'INVALID_HOST'){
-            span.textContent = 'INATIVO'
+            span.textContent = 'DOMÍNIO INVÁLIDO'
             span.className = 'text-danger'
-            obs.textContent = 'Domínio inválido.'
-        }else if(Object.keys(jsonWhois).length === 0 && jsonDig.status !== 'NO_RECORDS' && jsonDigWww.status === 'NO_RECORDS'){
-            span.textContent = 'INATIVO'
-            span.className = 'text-danger'
-            obs.textContent = 'Domínio não registrado e possui algum apontamento DIG.'
-        }else if(Object.keys(jsonWhois).length === 0 && jsonDig.status === 'NO_RECORDS' && jsonDigWww.status !== 'NO_RECORDS'){
-            span.textContent = 'ATIVO'
-            span.className = 'text-success'
-            obs.textContent = 'Domínio não registrado e possui algum apontamento DIG.'
-        }else if(Object.keys(jsonWhois).length !== 0 && jsonDig.status === 'NO_RECORDS' && jsonDigWww.status === 'NO_RECORDS'){
-            span.textContent = 'ATIVO'
-            span.className = 'text-success'
-            obs.textContent = 'Domínio registrado e não possui apontamento DIG.'
-        }else if(Object.keys(jsonWhois).length === 0 && jsonDig.status === 'FAILED_TO_VALIDATE' && jsonDigWww.status === 'FAILED_TO_VALIDATE'){
-            span.textContent = 'FALHA NA CONSULTA'
-            span.className = 'text-warning'
-            obs.textContent = 'Não foi possível validar os dados.'
-        }else if(Object.keys(jsonWhois).length !== 0 && jsonDig.status === 'OK' && jsonDigWww.status === 'OK'){
-            span.textContent = 'ATIVO'
-            span.className = 'text-success'
-            obs.textContent = 'Domínio registrado e possui apontamento DIG. (Isso não garante que o site esteja funcionando.)'
-        }else{
-            span.textContent = 'ERRO'
-            span.className = 'text-warning'
-            obs.textContent = 'Não foi possível validar os dados.'
         }
 
     } catch (error) {
-        span.textContent = 'ERRO'
+        span.textContent = 'ATIVO'
         span.className = 'text-warning'
-        obs.textContent = 'Não foi possível validar os dados.'
     }
 
 
