@@ -86,6 +86,8 @@ async function fetchData(dmn){
         jsonDig = data1
     } catch (error) {
         console.error(error)
+        jsonDig = null
+
     }
     //fim do bloco dig sem www
 
@@ -124,6 +126,8 @@ async function fetchData(dmn){
         jsonDigWww = data1
     } catch (error) {
         console.error(error)
+        jsonDigWww = null
+
     }
     //fim do bloco dig com www
 
@@ -141,12 +145,19 @@ async function fetchData(dmn){
                         return e*1000
                     }).sort((a, b) => a - b)[0]).toLocaleDateString('pt-br')
                     : new Date(data1.creation_date*1000).toLocaleDateString('pt-br'),
+
                     renewed: typeof(data1.creation_date) === 'object' 
                     ? new Date(data1.creation_date.map(e => {
                         return e*1000
                     }).sort((a, b) => b - a)[0]).toLocaleDateString('pt-br')
                     : new Date(data1.creation_date*1000).toLocaleDateString('pt-br'),
-                    expires: new Date(data1.expiration_date*1000).toLocaleDateString('pt-br'),
+
+                    expires: typeof(data1.expiration_date) === 'object' 
+                    ? new Date(data1.expiration_date.map(e => {
+                        return e*1000
+                    }).sort((a, b) => a - b)[0]).toLocaleDateString('pt-br')
+                    : new Date(data1.expiration_date*1000).toLocaleDateString('pt-br'),
+
                     domain: data1.domain_name 
                 }
 
@@ -184,11 +195,11 @@ async function fetchData(dmn){
             }else{
                 console.log(data1)
             }
-            jsonWhois = data1
-            
+            jsonWhois = data1 
         }
     } catch (error) {
         console.error(error)
+        jsonWhois = {}
     }
     //fim do bloco whois
 
@@ -202,29 +213,44 @@ async function fetchData(dmn){
         const data1 = await response1.json();
 
         const btnSPF = document.getElementById('spf');
-        btnSPF.textContent = "Mostrar SPF"
-        btnSPF.classList.remove('d-none')
+
 
         if(data1.status === 'OK'){
-
             const spf = data1.spf.split(' ').filter(e => e.substr(0,8) === 'include:')
-            spf.forEach(obj => {
-                const tableBody = document.getElementById('tbody');
-                const row = 
+            if(spf.length === 0){
+                data1.spf.split(' ').forEach(obj => {
+                    const tableBody = document.getElementById('tbody');
+                    const row = 
+                        `<tr class="d-none" data-type="SPF">
+                            <td>${domain}</td>
+                            <td>SPF</td>
+                            <td>${obj}</td>
+                        </tr>`
+                    tableBody.innerHTML += row;
+                });
+            }else{
+                spf.forEach(obj => {
+                    const tableBody = document.getElementById('tbody');
+                    const row = 
                     `<tr class="d-none" data-type="SPF">
-                        <td>${domain}</td>
-                        <td>SPF</td>
-                        <td>${obj.replace(/include:/g, '')}</td>
-                    </tr>`
-                tableBody.innerHTML += row;
-            });
+                    <td>${domain}</td>
+                            <td>SPF</td>
+                            <td>${obj.replace(/include:/g, '')}</td>
+                            </tr>`
+                    tableBody.innerHTML += row;
+                });
+            }
             
+            btnSPF.textContent = "Mostrar SPF"
+            btnSPF.classList.remove('d-none')
+            console.log(data1)
         }else{
             btnSPF.classList.add('d-none')
         }
         jsonSpf = data1
     } catch (error) {
         console.error(error)
+        jsonSpf = null
     }
     //fim do bloco spf
 
@@ -244,37 +270,52 @@ async function fetchData(dmn){
     document.getElementById('json').addEventListener("click", (e => {
         table.classList.add('d-none')
         json.classList.remove('d-none')
-        document.getElementById('data1').innerText = JSON.stringify(jsonSpf, null, 2)
-        document.getElementById('data2').innerText = JSON.stringify(jsonWhois, null, 2)
-        document.getElementById('data3').innerText = JSON.stringify(jsonDig, null, 2)
-        document.getElementById('data4').innerText = JSON.stringify(jsonDigWww, null, 2)
+        document.getElementById('data1').innerText = jsonSpf !== undefined ? JSON.stringify(jsonSpf, null, 2) : 'ERRO INTERNO'
+        document.getElementById('data2').innerText = jsonWhois !== undefined ? JSON.stringify(jsonWhois, null, 2) : 'ERRO INTERNO'
+        document.getElementById('data3').innerText = jsonDig !== undefined ? JSON.stringify(jsonDig, null, 2) : 'ERRO INTERNO'
+        document.getElementById('data4').innerText = jsonDigWww !== undefined ? JSON.stringify(jsonDigWww, null, 2) : 'ERRO INTERNO'
     }))
 
     //validar status para inserir info
-    if(Object.keys(jsonWhois).length === 0 && jsonDig.status === 'FAILED_TO_VALIDATE' && jsonDigWww.status === 'NO_RECORDS'){
-        table.classList.add('d-none')
-        document.getElementById('buy-domain').classList.remove('d-none')
-        document.getElementById('domain-available').textContent = domain
-    }else if(Object.keys(jsonWhois).length === 0 && jsonDig.status !== 'NO_RECORDS' && jsonDigWww.status === 'NO_RECORDS'){
-        span.textContent = 'INATIVO'
-        span.className = 'text-danger'
-        obs.textContent = 'Domínio não registrado e possui algum apontamento DIG.'
-    }else if(Object.keys(jsonWhois).length === 0 && jsonDig.status === 'NO_RECORDS' && jsonDigWww.status !== 'NO_RECORDS'){
-        span.textContent = 'ATIVO'
-        span.className = 'text-danger'
-        obs.textContent = 'Domínio não registrado e possui algum apontamento DIG.'
-    }else if(Object.keys(jsonWhois).length !== 0 && jsonDig.status === 'NO_RECORDS' && jsonDigWww.status === 'NO_RECORDS'){
-        span.textContent = 'ATIVO'
-        span.className = 'text-danger'
-        obs.textContent = 'Domínio registrado e não possui apontamento DIG.'
-    }else if(Object.keys(jsonWhois).length === 0 && jsonDig.status === 'FAILED_TO_VALIDATE' && jsonDigWww.status === 'FAILED_TO_VALIDATE'){
-        span.textContent = 'FALHA NA CONSULTA'
+    try {
+        if(Object.keys(jsonWhois).length === 0 && jsonDig.status === 'NO_RECORDS' && jsonDigWww.status === 'NO_RECORDS'){
+            table.classList.add('d-none')
+            document.getElementById('buy-domain').classList.remove('d-none')
+            document.getElementById('domain-available').textContent = domain
+        }else if(Object.keys(jsonWhois).length === 0 && jsonDig.status === 'INVALID_HOST' || jsonDigWww.status === 'INVALID_HOST'){
+            span.textContent = 'INATIVO'
+            span.className = 'text-danger'
+            obs.textContent = 'Domínio inválido.'
+        }else if(Object.keys(jsonWhois).length === 0 && jsonDig.status !== 'NO_RECORDS' && jsonDigWww.status === 'NO_RECORDS'){
+            span.textContent = 'INATIVO'
+            span.className = 'text-danger'
+            obs.textContent = 'Domínio não registrado e possui algum apontamento DIG.'
+        }else if(Object.keys(jsonWhois).length === 0 && jsonDig.status === 'NO_RECORDS' && jsonDigWww.status !== 'NO_RECORDS'){
+            span.textContent = 'ATIVO'
+            span.className = 'text-success'
+            obs.textContent = 'Domínio não registrado e possui algum apontamento DIG.'
+        }else if(Object.keys(jsonWhois).length !== 0 && jsonDig.status === 'NO_RECORDS' && jsonDigWww.status === 'NO_RECORDS'){
+            span.textContent = 'ATIVO'
+            span.className = 'text-success'
+            obs.textContent = 'Domínio registrado e não possui apontamento DIG.'
+        }else if(Object.keys(jsonWhois).length === 0 && jsonDig.status === 'FAILED_TO_VALIDATE' && jsonDigWww.status === 'FAILED_TO_VALIDATE'){
+            span.textContent = 'FALHA NA CONSULTA'
+            span.className = 'text-warning'
+            obs.textContent = 'Não foi possível validar os dados.'
+        }else if(Object.keys(jsonWhois).length !== 0 && jsonDig.status === 'OK' && jsonDigWww.status === 'OK'){
+            span.textContent = 'ATIVO'
+            span.className = 'text-success'
+            obs.textContent = 'Domínio registrado e possui apontamento DIG. (Isso não garante que o site está funcionando.)'
+        }else{
+            span.textContent = 'ERRO'
+            span.className = 'text-warning'
+            obs.textContent = 'Não foi possível validar os dados.'
+        }
+
+    } catch (error) {
+        span.textContent = 'ERRO'
         span.className = 'text-warning'
         obs.textContent = 'Não foi possível validar os dados.'
-    }else{
-        span.textContent = 'ATIVO'
-        span.className = 'text-success'
-        obs.textContent = 'Domínio registrado e possui apontamento DIG. (Isso não garante que o site está funcionando.)'
     }
 
 
