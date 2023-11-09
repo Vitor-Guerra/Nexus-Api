@@ -267,7 +267,7 @@ async function fetchData(dmn){
         span.textContent = 'ATIVO'
         span.className = 'text-danger'
         obs.textContent = 'Domínio registrado e não possui apontamento DIG.'
-    }else if(Object.keys(jsonWhois).length === 0 && jsonDig.status !== 'FAILED_TO_VALIDATE' && jsonDigWww.status !== 'FAILED_TO_VALIDATE'){
+    }else if(Object.keys(jsonWhois).length === 0 && jsonDig.status === 'FAILED_TO_VALIDATE' && jsonDigWww.status === 'FAILED_TO_VALIDATE'){
         span.textContent = 'FALHA NA CONSULTA'
         span.className = 'text-warning'
         obs.textContent = 'Não foi possível validar os dados.'
