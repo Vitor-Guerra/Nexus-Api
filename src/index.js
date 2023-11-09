@@ -305,7 +305,7 @@ async function fetchData(dmn){
         }else if(Object.keys(jsonWhois).length !== 0 && jsonDig.status === 'OK' && jsonDigWww.status === 'OK'){
             span.textContent = 'ATIVO'
             span.className = 'text-success'
-            obs.textContent = 'Domínio registrado e possui apontamento DIG. (Isso não garante que o site está funcionando.)'
+            obs.textContent = 'Domínio registrado e possui apontamento DIG. (Isso não garante que o site esteja funcionando.)'
         }else{
             span.textContent = 'ERRO'
             span.className = 'text-warning'
