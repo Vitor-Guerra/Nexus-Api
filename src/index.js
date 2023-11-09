@@ -40,17 +40,22 @@ document.getElementById('back').addEventListener("click", function(event) {
 async function fetchData(dmn){
 
     const domain = dmn.replace(/www\./g, '')
+    const span = document.getElementById('status')
     const options = {
         method: 'GET',
         headers: {
             'X-Api-Key': '+DEuGJ/348TCRnFmNsoD3g==Wkwi8GrmQAfYckxm'
         }
     }
-
+    
     var jsonDig;
     var jsonWhois;
     var jsonDigWww;
     var jsonSpf;
+    var domainblocked = false;
+
+    span.textContent = 'ATIVO'
+    span.className = 'text-success'
 
 
     //bloco dig sem www
@@ -143,20 +148,20 @@ async function fetchData(dmn){
                     created: typeof(data1.creation_date) === 'object' 
                     ? new Date(data1.creation_date.map(e => {
                         return e*1000
-                    }).sort((a, b) => a - b)[0]).toLocaleDateString('pt-br')
-                    : new Date(data1.creation_date*1000).toLocaleDateString('pt-br'),
+                    }).sort((a, b) => a - b)[0])
+                    : new Date(data1.creation_date*1000),
 
                     renewed: typeof(data1.creation_date) === 'object' 
                     ? new Date(data1.creation_date.map(e => {
                         return e*1000
-                    }).sort((a, b) => b - a)[0]).toLocaleDateString('pt-br')
-                    : new Date(data1.creation_date*1000).toLocaleDateString('pt-br'),
+                    }).sort((a, b) => b - a)[0])
+                    : new Date(data1.creation_date*1000),
 
                     expires: typeof(data1.expiration_date) === 'object' 
                     ? new Date(data1.expiration_date.map(e => {
                         return e*1000
-                    }).sort((a, b) => a - b)[0]).toLocaleDateString('pt-br')
-                    : new Date(data1.expiration_date*1000).toLocaleDateString('pt-br'),
+                    }).sort((a, b) => a - b)[0])
+                    : new Date(data1.expiration_date*1000),
 
                     domain: data1.domain_name 
                 }
@@ -164,32 +169,21 @@ async function fetchData(dmn){
 
 
                 const tableBody = document.getElementById('tbody');
-                const span = document.getElementById('status');
                 const row = Object.keys(whois).map(el => {
-                    if(el === 'expires'){
-                        span.textContent = 'CONGELADO'
-                        span.className = 'text-danger'
-                        return new Date(whois.expires) < new Date() 
-                        ? `
+                    if(el === 'expires' && new Date(whois.expires) < new Date()){
+                        domainblocked = true
+                        return `
                         <tr>
                             <td class="text-danger">${domain}</td>
                             <td class="text-danger">${el}</td>
-                            <td class="text-danger">${whois[el]}</td>
-                        </tr>`
-                        : `
-                        <tr>
-                            <td>${domain}</td>
-                            <td>${el}</td>
-                            <td>${whois[el]}</td>
+                            <td class="text-danger">${new Date(whois[el]).toLocaleDateString()}</td>
                         </tr>`
                     }else{
-                        span.textContent = 'ATIVO'
-                        span.className = 'text-success'
                         return `
                         <tr>
                             <td>${domain}</td>
                             <td>${el}</td>
-                            <td>${whois[el]}</td>
+                            <td>${el === 'domain' ? whois[el] : new Date(whois[el]).toLocaleDateString()}</td>
                         </tr>`
                     }
                 }).join('')
@@ -264,8 +258,6 @@ async function fetchData(dmn){
     const table = document.getElementById('response')
     const loading = document.getElementById('loading')
     const json = document.getElementById('show-json')
-    const span = document.getElementById('status')
-    const obs = document.getElementById('obs')
     loading.classList.add('d-none')
     json.classList.add('d-none')
     h3.textContent = domain
@@ -283,13 +275,16 @@ async function fetchData(dmn){
 
     //validar status para inserir info
     try {
-        if(Object.keys(jsonWhois).length === 0 && jsonDig.status === 'NO_RECORDS' && jsonDigWww.status === 'NO_RECORDS'){
+        if(Object.keys(jsonWhois).length === 0 && jsonDig.status === 'NO_RECORDS' && jsonDigWww.status === 'NO_RECORDS' && domainblocked === false){
             table.classList.add('d-none')
             document.getElementById('buy-domain').classList.remove('d-none')
             document.getElementById('domain-available').textContent = domain
-        }else if(Object.keys(jsonWhois).length === 0 && jsonDig.status === 'INVALID_HOST' || jsonDigWww.status === 'INVALID_HOST'){
+        }else if(Object.keys(jsonWhois).length === 0 && jsonDig.status === 'INVALID_HOST' || jsonDigWww.status === 'INVALID_HOST' && domainblocked === false){
             span.textContent = 'DOMÍNIO INVÁLIDO'
             span.className = 'text-danger'
+        }else if(domainblocked === true){
+            span.textContent = 'CONGELADO'
+            span.className = 'text-danger' 
         }
 
     } catch (error) {
